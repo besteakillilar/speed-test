@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İnternet Hız Testi</title>
+    <meta name="description"
+        content="İnternet hız testi - Download ve Upload hızınızı ölçün, otomatik zamanlayıcı ile günlük rapor alın.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="url(#logoGrad)" stroke-width="2.5" opacity="0.3" />
+                    <path d="M12 20C12 15.58 15.58 12 20 12C24.42 12 28 15.58 28 20" stroke="url(#logoGrad)"
+                        stroke-width="2.5" stroke-linecap="round" />
+                    <path d="M20 20L25 15" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" />
+                    <circle cx="20" cy="20" r="2.5" fill="url(#logoGrad)" />
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#6366f1" />
+                            <stop offset="100%" stop-color="#06b6d4" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">Speed<span class="logo-accent">Test</span></span>
+            </div>
+            <div class="header-right">
+                <div class="live-clock" id="liveClock">--:--:--</div>
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Bağlı</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Speed Gauge Section -->
+            <section class="gauge-section">
+                <div class="gauge-container" id="gaugeContainer">
+                    <svg class="gauge-svg" viewBox="0 0 300 200">
+                        <!-- Background arc -->
+                        <path class="gauge-bg" d="M30 180 A120 120 0 0 1 270 180" fill="none" stroke-width="18"
+                            stroke-linecap="round" />
+                        <!-- Progress arc -->
+                        <path class="gauge-progress" id="gaugeProgress" d="M30 180 A120 120 0 0 1 270 180" fill="none"
+                            stroke-width="18" stroke-linecap="round" />
+                        <!-- Tick marks -->
+                        <g class="gauge-ticks" id="gaugeTicks"></g>
+                    </svg>
+                    <div class="gauge-value-container">
+                        <div class="gauge-value" id="gaugeValue">0</div>
+                        <div class="gauge-unit">Mbps</div>
+                    </div>
+                    <div class="gauge-label" id="gaugeLabel">Teste Hazır</div>
+                </div>
+
+                <!-- Start Button -->
+                <button class="start-btn" id="startBtn" onclick="startSpeedTest()">
+                    <span class="start-btn-text">BAŞLAT</span>
+                    <span class="start-btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                    </span>
+                </button>
+            </section>
+
+            <!-- Results Cards -->
+            <section class="results-section">
+                <div class="result-card" id="downloadCard">
+                    <div class="result-icon download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                    </div>
+                    <div class="result-info">
+                        <span class="result-label">İndirme</span>
+                        <span class="result-value" id="downloadSpeed">--</span>
+                        <span class="result-unit">Mbps</span>
+                    </div>
+                </div>
+                <div class="result-card" id="uploadCard">
+                    <div class="result-icon upload-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                    </div>
+                    <div class="result-info">
+                        <span class="result-label">Yükleme</span>
+                        <span class="result-value" id="uploadSpeed">--</span>
+                        <span class="result-unit">Mbps</span>
+                    </div>
+                </div>
+                <div class="result-card" id="pingCard">
+                    <div class="result-icon ping-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <div class="result-info">
+                        <span class="result-label">Ping</span>
+                        <span class="result-value" id="pingValue">--</span>
+                        <span class="result-unit">ms</span>
+                    </div>
+                </div>
+                <div class="result-card" id="jitterCard">
+                    <div class="result-icon jitter-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                    </div>
+                    <div class="result-info">
+                        <span class="result-label">Jitter</span>
+                        <span class="result-value" id="jitterValue">--</span>
+                        <span class="result-unit">ms</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule & Rating Section -->
+            <section class="bottom-section">
+                <!-- Auto Schedule Panel -->
+                <div class="schedule-panel glass-card">
+                    <div class="panel-header">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width:20px;height:20px;margin-right:8px;vertical-align:middle;">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            Otomatik Zamanlayıcı
+                        </h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoScheduleToggle" onchange="toggleAutoSchedule()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="schedule-times">
+                        <div class="schedule-item" id="schedule-0830">
+                            <span class="schedule-time">08:30</span>
+                            <span class="schedule-label">Sabah</span>
+                            <span class="schedule-status" id="status-0830">Bekliyor</span>
+                        </div>
+                        <div class="schedule-item" id="schedule-1430">
+                            <span class="schedule-time">14:30</span>
+                            <span class="schedule-label">Öğlen</span>
+                            <span class="schedule-status" id="status-1430">Bekliyor</span>
+                        </div>
+                        <div class="schedule-item" id="schedule-1730">
+                            <span class="schedule-time">17:30</span>
+                            <span class="schedule-label">Akşam</span>
+                            <span class="schedule-status" id="status-1730">Bekliyor</span>
+                        </div>
+                    </div>
+                    <div class="next-test-info" id="nextTestInfo">
+                        Zamanlayıcı kapalı
+                    </div>
+                </div>
+
+                <!-- Today's Rating Panel -->
+                <div class="rating-panel glass-card">
+                    <div class="panel-header">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width:20px;height:20px;margin-right:8px;vertical-align:middle;">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                            Günün Değerlendirmesi
+                        </h3>
+                    </div>
+                    <div class="rating-display" id="ratingDisplay">
+                        <div class="rating-emoji" id="ratingEmoji">⏳</div>
+                        <div class="rating-text" id="ratingText">Test bekleniyor</div>
+                        <div class="rating-bar-container">
+                            <div class="rating-bar" id="ratingBar"></div>
+                        </div>
+                        <div class="rating-details" id="ratingDetails">
+                            Henüz test yapılmadı
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- History Section -->
+            <section class="history-section glass-card">
+                <div class="panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width:20px;height:20px;margin-right:8px;vertical-align:middle;">
+                            <path d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" />
+                        </svg>
+                        Test Geçmişi
+                    </h3>
+                </div>
+                <!-- Date Navigation -->
+                <div class="history-date-nav">
+                    <button class="nav-btn nav-prev" id="historyPrev" onclick="navigateHistory(-1)" title="Önceki Gün">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <div class="nav-date-display">
+                        <span class="nav-date-label" id="historyDateLabel">Bugün</span>
+                        <span class="nav-date-value" id="historyDateValue"></span>
+                    </div>
+                    <button class="nav-btn nav-next" id="historyNext" onclick="navigateHistory(1)" title="Sonraki Gün"
+                        disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="history-table-container">
+                    <table class="history-table" id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>Saat</th>
+                                <th>Tür</th>
+                                <th>İndirme</th>
+                                <th>Yükleme</th>
+                                <th>Ping</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <tr class="empty-row">
+                                <td colspan="6">Henüz test yapılmadı</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
